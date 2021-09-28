@@ -31,7 +31,7 @@ def get_pca(X):
     w = direction(w)
     history_var = []
 
-    epoch = 20
+    epoch = 500
     for _ in range(epoch):
         loss = mapping_standard_deviation(dem_X, w)
         w_grad = grad_calculate(dem_X, w)
@@ -41,12 +41,12 @@ def get_pca(X):
     return w, history_var
 
 
-pca, history = get_pca(data)
-plt.title('single PCA')
-plt.scatter(data[:, 0], data[:, 1])
-plt.plot([0, pca[0] * 120], [0, pca[1] * 120], color='red')
-plt.savefig('./single PCA.jpg')
-plt.show()
+pca_w, history = get_pca(data)
+# plt.title('single PCA')
+# plt.scatter(data[:, 0], data[:, 1])
+# plt.plot([0, pca_w[0] * 120], [0, pca_w[1] * 120], color='red')
+# plt.savefig('./single PCA.jpg')
+# plt.show()
 
 plt.title('standard deviation for single PCA')
 plt.xlabel("epoch")
@@ -56,3 +56,17 @@ plt.ylabel("stand deviation")
 plt.plot(np.arange(len(history)), history)
 plt.savefig('./single PCA standard deviation.jpg')
 plt.show()
+
+
+project_dist = np.dot(data, pca_w)
+projected_point = np.full(data.shape, 0)
+projected_remain = np.full(data.shape, 0)
+for i in range(len(data)):
+    projected_point[i] = data[i].dot(pca_w) * pca_w
+    projected_remain[i] = data[i] - projected_point[i]
+plt.title('PCA result')
+plt.scatter(data[:, 0], data[:, 1], alpha=0.5)
+plt.scatter(projected_point[:, 0], projected_point[:, 1], edgecolors='red', alpha=0.5)
+plt.scatter(projected_remain[:, 0], projected_remain[:, 1], edgecolors='green', alpha=0.5)
+plt.show()
+pass
